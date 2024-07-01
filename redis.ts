@@ -1,8 +1,11 @@
-import Redis from "ioredis";
+import Redis, { RedisOptions } from "ioredis";
 
-export const redisConfig = {
-  port: 6379,
-  host: "127.0.0.1",
+if (!process.env.redisPort || !process.env.redisHost)
+  throw new Error("missing env variables for redis config");
+
+export const redisConfig: RedisOptions = {
+  port: Number(process.env.redisPort),
+  host: process.env.redisHost,
 };
 
 export const redis = new Redis(redisConfig);
