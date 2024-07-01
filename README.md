@@ -65,6 +65,14 @@ Running this demo is almost as exciting as watching paint dry. Follow these simp
    bun run index.ts
    ```
 
+3. Make sure that your redis instance has the setting
+
+   ```sh
+   maxmemory-policy=noeviction
+   ```
+
+in order to avoid automatic removal of keys which would cause unexpected errors in BullMQ
+
 ## Contributing
 
 Please don't. But if you absolutely must, here's how:
