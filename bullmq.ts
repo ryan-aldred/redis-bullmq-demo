@@ -1,5 +1,5 @@
 import { Queue, Worker } from "bullmq";
-import { redis, redisConfig } from "./redis";
+import { redisConnection, redisConfig } from "./redis";
 
 export async function addTradeToQueue({ ticker }: { ticker: string }) {
   return await tradeQueue.add("trades", { ticker: "sol/usdc" });
@@ -50,7 +50,7 @@ tradeWorker.on("failed", async (job, err) => {
 });
 
 async function getRedisMemoryUsed() {
-  const memoryInfo = await redis.info("memory");
+  const memoryInfo = await redisConnection.info("memory");
   const memoryUsed = memoryInfo.match(/used_memory:(\d+)/);
 
   if (memoryUsed !== null) {

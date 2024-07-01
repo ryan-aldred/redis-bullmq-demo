@@ -8,12 +8,15 @@ export const redisConfig: RedisOptions = {
   host: process.env.redisHost,
 };
 
-export const redis = new Redis(redisConfig);
+// can be reused for Queues and Workers
+// if maxRetriesPerRequest uis bykk
+// but not QueueScheduler and QueueEvents
+export const redisConnection = new Redis(redisConfig);
 
-redis.on("connect", () => {
+redisConnection.on("connect", () => {
   console.log("connected to redis");
 });
 
-redis.on("error", (error: Error) => {
+redisConnection.on("error", (error: Error) => {
   console.log("something went wrong with redis", error);
 });
