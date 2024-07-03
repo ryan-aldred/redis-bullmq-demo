@@ -1,5 +1,6 @@
 import { Queue, Worker } from "bullmq";
 import { redisConnection, redisConfig } from "./redis";
+import { emitTradeCompleteEvent, eventEmitter } from "./eventEmitter";
 
 export async function addTradeToQueue({ ticker }: { ticker: string }) {
   return await tradeQueue.add("trades", { ticker: "sol/usdc" });
@@ -20,7 +21,7 @@ const tradeQueue = new Queue("trades", {
 
 console.log("redis memory used before", await getRedisMemoryUsed());
 
-const tradeWorker = new Worker(
+export const tradeWorker = new Worker(
   "trades",
   async (job) => {
     console.log("processing job");
@@ -36,6 +37,7 @@ const tradeWorker = new Worker(
 tradeWorker.on("completed", async (job) => {
   console.log(`trade job ${job.id} completed`);
   console.log("redis memory used after", await getRedisMemoryUsed());
+  emitTradeCompleteEvent(job.data);
 });
 
 tradeWorker.on("failed", async (job, err) => {
