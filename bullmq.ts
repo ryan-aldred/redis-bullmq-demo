@@ -25,7 +25,10 @@ export const tradeWorker = new Worker(
   "trades",
   async (job) => {
     console.log("processing job");
-    console.log(job.data);
+    await wait(3000);
+    console.log("job done waited");
+    return true;
+
     // throw new Error("haha your fucked");
   },
   {
@@ -60,4 +63,8 @@ async function getRedisMemoryUsed() {
   }
 
   throw new Error("Failed to get redis memory used");
+}
+
+async function wait(time: number) {
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
